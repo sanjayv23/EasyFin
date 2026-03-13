@@ -1,0 +1,386 @@
+.loan-page {
+  min-height: 100vh;
+  width: 100vw;
+  
+  background: #f5f4f1;
+  color: #1a1a18;
+  font-family: Roboto,Arial, Helvetica, sans-serif;
+}
+
+.loan-shell {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 26px 24px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.loan-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.loan-title {
+  margin: 0;
+  font-size: clamp(2.1rem, 4vw, 2.9rem);
+  line-height: 1;
+  font-weight: 700;
+  color: #161614;
+}
+
+.loan-subtitle {
+  margin: 12px 0 0;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.95rem;
+  color: #2f2e2a;
+}
+
+.add-liability-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  border: 0;
+  border-radius: 6px;
+  background: #31744a;
+  color: #f8f6f0;
+  padding: 12px 18px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  box-shadow: none;
+}
+
+.add-liability-button:hover {
+  border-color: transparent;
+  background: #2b6841;
+}
+
+.add-liability-plus {
+  font-size: 1.5rem;
+  line-height: 1;
+  font-weight: 400;
+}
+
+.loan-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  border-bottom: 1px solid #d9d2c6;
+}
+
+.loan-tab {
+  padding: 0 0 12px;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: #3c3a34;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.loan-tab:hover {
+  border-color: transparent;
+  color: #2a6b44;
+}
+
+.loan-tab-active {
+  color: #2a6b44;
+  border-bottom-color: #2a6b44;
+}
+
+.loan-summary-card,
+.loan-table-card {
+  background: #fbfaf7;
+  border: 1px solid #d8d2c8;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(58, 52, 44, 0.08);
+}
+
+.loan-summary-card {
+  margin: 0 auto;
+  padding: 22px 22px 18px;
+  width: min(100%, 920px);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.loan-summary-label {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  color: #1c1d1b;
+}
+
+.loan-summary-value {
+  font-size: clamp(1.9rem, 4vw, 2.5rem);
+  font-weight: 700;
+  color: #d24a2f;
+}
+
+.loan-table-card {
+  margin: 0 auto;
+  width: min(100%, 920px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.loan-table-header,
+.loan-table-row {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr 1.2fr 0.7fr 92px;
+  align-items: center;
+}
+
+.loan-table-header {
+  padding: 16px 18px 14px;
+  border-bottom: 1px solid #d8d2c8;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.88rem;
+  letter-spacing: 0.05em;
+  color: #11110f;
+}
+
+.loan-table-row {
+  padding: 18px;
+  border-bottom: 1px solid #d8d2c8;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.98rem;
+  column-gap: 16px;
+  row-gap: 12px;
+}
+
+.loan-cell {
+  min-width: 0;
+}
+
+.loan-mobile-label {
+  display: none;
+  margin-bottom: 6px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #6f6a60;
+}
+
+.loan-header-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.loan-sort-arrow {
+  color: #2f754b;
+  font-size: 1rem;
+}
+
+.loan-name {
+  font-weight: 700;
+  color: #181715;
+}
+
+.loan-type-pill {
+  width: fit-content;
+  border-radius: 5px;
+  background: #f1dfb6;
+  color: #c37913;
+  padding: 6px 12px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.9rem;
+}
+
+.loan-outstanding {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #de5437;
+}
+
+.loan-rate {
+  text-align: left;
+  color: #161614;
+}
+
+.loan-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: flex-start;
+}
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #1f1f1d;
+}
+
+.icon-button:hover {
+  border-color: transparent;
+  background: rgba(49, 116, 74, 0.08);
+}
+
+.icon-button svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.icon-button-delete {
+  color: #d24a2f;
+}
+
+.loan-table-footer {
+  padding: 14px 18px 18px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.95rem;
+  color: #11110f;
+}
+
+@media (max-width: 768px) {
+  .loan-shell {
+    padding: 22px 16px 36px;
+  }
+
+  .loan-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .add-liability-button {
+    align-self: flex-start;
+  }
+
+  .loan-tabs {
+    flex-wrap: nowrap;
+    gap: 18px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+
+  .loan-summary-card,
+  .loan-table-card {
+    width: 100%;
+  }
+
+  .loan-summary-card {
+    padding: 18px;
+  }
+
+  .loan-table-header,
+  .loan-table-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .loan-table-header {
+    display: none;
+  }
+
+  .loan-table-row {
+    grid-template-areas:
+      "name actions"
+      "type outstanding"
+      "rate rate";
+    align-items: start;
+  }
+
+  .loan-cell-name {
+    grid-area: name;
+  }
+
+  .loan-cell-type {
+    grid-area: type;
+  }
+
+  .loan-cell-outstanding {
+    grid-area: outstanding;
+  }
+
+  .loan-cell-rate {
+    grid-area: rate;
+  }
+
+  .loan-mobile-label {
+    display: block;
+  }
+
+  .loan-row-actions {
+    grid-area: actions;
+    justify-content: flex-end;
+    align-self: start;
+  }
+
+  .loan-outstanding,
+  .loan-rate {
+    display: block;
+  }
+
+  .loan-table-footer {
+    padding-top: 16px;
+  }
+}
+
+@media (max-width: 520px) {
+  .loan-page {
+    min-height: 100dvh;
+  }
+
+  .loan-shell {
+    padding: 18px 12px 28px;
+    gap: 16px;
+  }
+
+  .loan-title {
+    font-size: 1.9rem;
+  }
+
+  .loan-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .add-liability-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .loan-summary-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .loan-summary-value {
+    align-self: flex-end;
+  }
+
+  .loan-table-row {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "name"
+      "type"
+      "outstanding"
+      "rate"
+      "actions";
+  }
+
+  .loan-row-actions {
+    justify-content: flex-start;
+  }
+}

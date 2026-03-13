@@ -213,7 +213,7 @@ app.delete("/api/loans/:loan_id", authMiddleware, async (req, res) => {
     WHERE id = $1 AND user_id = $2
     RETURNING *;
   `;
-
+  console.log("df");
   try {
     const result = await db.query(query, [loan_id, userId]);
 

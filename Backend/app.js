@@ -116,7 +116,7 @@ app.get("/api/loans", authMiddleware, async (req, res) => {
 
 app.get("/api/loans/:id", authMiddleware, async (req, res) => {
   const user_id = req.user.id;
-  const id=req.params.id;
+  const {id}=req.params;
   console.log(user_id+" "+id);
   const query = `
     SELECT *
@@ -206,6 +206,7 @@ app.put("/api/loans/:id", authMiddleware, async (req, res) => {
 
 app.delete("/api/loans/:loan_id", authMiddleware, async (req, res) => {
   const userId = req.user.id;
+  console.log(req.params);
   const { loan_id } = req.params;
 
   const query = `

@@ -142,9 +142,9 @@ app.get("/api/loans/:id", authMiddleware, async (req, res) => {
 app.put("/api/loans/:id", authMiddleware, async (req, res) => {
   const userId = req.user.id;
   const id  = req.params.id;
-  let currentLoan;
+  let oldLoanName,oldLoanType,oldOutStandingAmt,OldInterest,oldMonthlyEmi;
   //console.log(userId+" "+id);
-  const{}
+  
   const queryForCurrentLoan = `
     SELECT *
     FROM loans
@@ -154,17 +154,15 @@ app.put("/api/loans/:id", authMiddleware, async (req, res) => {
 
   try {
     const result = await db.query(queryForCurrentLoan, [userId,id]);
-    console.log(result.rows)
-    const
-      loanName,
-      loanType,
-      outstandingAmount,
-      interestRate,
-      monthlyEmi}=result.rows
-    res.status(200).json({
-      message: "Loans fetched successfully",
-      currentLoan: result.rows,
-    });
+    console.log(result.rows[0]);
+    oldLoanName=result.rows[0].loan_name;
+    oldLoanType=result.rows[0].loan_type;
+    oldMonthlyEmi=result.rows[0].monthly_emi;
+    oldOutStandingAmt=result.rows[0].outstanding_amount;
+    OldInterest=result.rows[0].interest_rate;
+    
+      
+    
   } catch (error) {
     res.status(500).json({
       message: "Failed to fetch loans",
@@ -172,66 +170,73 @@ app.put("/api/loans/:id", authMiddleware, async (req, res) => {
     });
   }
   
-  
+  console.log(req.body.loan_type!=undefined)
+  let newLoanName,newLoanType,newOutStandingAmt,newInterest,newMonthlyEmi;
+    newLoanName=oldLoanName;
+    newLoanType=oldLoanType;
+    newOutStandingAmt=oldOutStandingAmt;
+    newMonthlyEmi=oldMonthlyEmi;
+    newInterest=OldInterest;
+  if(req.body.loan_type!=undefined) newLoanType=req.body.loan_type;
+  if(req.body.loan_name!=undefined) newLoanName=req.body.loan_name;
+  if(req.body.outstanding_amount!=undefined) newOutStandingAmt=req.body.outstanding_amount;
+  if(req.body.monthly_emi!=undefined) newMonthlyEmi=req.body.monthly_emi;
+  if(req.body.interest_rate!=undefined) newInterest=req.body.interest_rate;
+
   // const {
     
-  //   loanName,
-  //   loanType,
+  //   newloanName,
+  //   newloanType,
     
-  //   outstandingAmount,
-  //   interestRate,
-  //   monthlyEmi,
+  //   newoutstandingAmount,
+  //   newinterestRate,
+  //   newmonthlyEmi,
     
   // } = req.body;
 
-  
+  console.log(newLoanName+" "+newLoanType+" "+newOutStandingAmt+" "+newInterest+" "+newMonthlyEmi)
 
   
 
-  // const query = `
-  //   UPDATE loans
-  //   SET
-  //     loan_name = $1,
-  //     loan_type = $2,
+  const query = `
+    UPDATE loans
+    SET
+      loan_name = $1,
+      loan_type = $2,
       
-  //     outstanding_amount = $3,
-  //     interest_rate = $4,
-  //     monthly_emi = $5
-  //   WHERE id = $6 AND user_id = $7
-  //   RETURNING *;
-  // `;
+      outstanding_amount = $3,
+      interest_rate = $4,
+      monthly_emi = $5
+    WHERE id = $6 AND user_id = $7
+    RETURNING *;
+  `;
 
-  // const values = [
+  const values = [
    
-  //   loanName,
-  //   loanType,
-    
-  //   outstandingAmount,
-  //   interestRate,
-  //   monthlyEmi,
-  //    id,
-  //   userId
-  // ];
+    newLoanName,newLoanType,newOutStandingAmt,newInterest,newMonthlyEmi,
+    id,
+    userId
+  ];
+  console.log(values)
+  try {
+    const result = await db.query(query, values);
 
-  // try {
-  //   const result = await db.query(query, values);
+    if (result.rowCount === 0) {
+      return res.status(404).json({
+        message: "Loan not found",
+      });
+    }
 
-  //   if (result.rowCount === 0) {
-  //     return res.status(404).json({
-  //       message: "Loan not found",
-  //     });
-  //   }
-
-  //   res.status(200).json({
-  //     message: "Loan updated successfully",
-  //     loan: result.rows[0],
-  //   });
-  // } catch (error) {
-  //   res.status(500).json({
-  //     message: "Failed to update loan",
-  //     error: error.message,
-  //   });
-  // }
+    res.status(200).json({
+      message: "Loan updated successfully",
+      loan: result.rows[0],
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to update loan",
+      error: error.message,
+    });
+  }
 });
 
 

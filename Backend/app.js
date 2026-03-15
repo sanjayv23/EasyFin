@@ -141,66 +141,97 @@ app.get("/api/loans/:id", authMiddleware, async (req, res) => {
 
 app.put("/api/loans/:id", authMiddleware, async (req, res) => {
   const userId = req.user.id;
-  const { id } = req.params;
-  const {
-    
-    loanName,
-    loanType,
-    
-    outstandingAmount,
-    interestRate,
-    monthlyEmi,
-    
-  } = req.body;
-
-  
-
-  
-
-  const query = `
-    UPDATE loans
-    SET
-      loan_name = $1,
-      loan_type = $2,
-      
-      outstanding_amount = $3,
-      interest_rate = $4,
-      monthly_emi = $5
-    WHERE id = $6 AND user_id = $7
-    RETURNING *;
+  const id  = req.params.id;
+  let currentLoan;
+  //console.log(userId+" "+id);
+  const{}
+  const queryForCurrentLoan = `
+    SELECT *
+    FROM loans
+    WHERE user_id = $1 AND id = $2
+    ORDER BY created_at DESC;
   `;
 
-  const values = [
-   
-    loanName,
-    loanType,
-    
-    outstandingAmount,
-    interestRate,
-    monthlyEmi,
-     id,
-    userId
-  ];
-
   try {
-    const result = await db.query(query, values);
-
-    if (result.rowCount === 0) {
-      return res.status(404).json({
-        message: "Loan not found",
-      });
-    }
-
+    const result = await db.query(queryForCurrentLoan, [userId,id]);
+    console.log(result.rows)
+    const
+      loanName,
+      loanType,
+      outstandingAmount,
+      interestRate,
+      monthlyEmi}=result.rows
     res.status(200).json({
-      message: "Loan updated successfully",
-      loan: result.rows[0],
+      message: "Loans fetched successfully",
+      currentLoan: result.rows,
     });
   } catch (error) {
     res.status(500).json({
-      message: "Failed to update loan",
+      message: "Failed to fetch loans",
       error: error.message,
     });
   }
+  
+  
+  // const {
+    
+  //   loanName,
+  //   loanType,
+    
+  //   outstandingAmount,
+  //   interestRate,
+  //   monthlyEmi,
+    
+  // } = req.body;
+
+  
+
+  
+
+  // const query = `
+  //   UPDATE loans
+  //   SET
+  //     loan_name = $1,
+  //     loan_type = $2,
+      
+  //     outstanding_amount = $3,
+  //     interest_rate = $4,
+  //     monthly_emi = $5
+  //   WHERE id = $6 AND user_id = $7
+  //   RETURNING *;
+  // `;
+
+  // const values = [
+   
+  //   loanName,
+  //   loanType,
+    
+  //   outstandingAmount,
+  //   interestRate,
+  //   monthlyEmi,
+  //    id,
+  //   userId
+  // ];
+
+  // try {
+  //   const result = await db.query(query, values);
+
+  //   if (result.rowCount === 0) {
+  //     return res.status(404).json({
+  //       message: "Loan not found",
+  //     });
+  //   }
+
+  //   res.status(200).json({
+  //     message: "Loan updated successfully",
+  //     loan: result.rows[0],
+  //   });
+  // } catch (error) {
+  //   res.status(500).json({
+  //     message: "Failed to update loan",
+  //     error: error.message,
+  //   });
+  // }
 });
 
 

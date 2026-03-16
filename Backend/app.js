@@ -34,6 +34,9 @@ app.get("/", (req, res) => {
   res.send("Server is running");
 });
 
+
+// LOANS - 
+
 app.post("/api/loans", authMiddleware, async (req, res) => {
   const userId = req.user.id;
   console.log("user ID "  + userId);
@@ -139,7 +142,32 @@ app.get("/api/loans/:id", authMiddleware, async (req, res) => {
   }
 });
 
+app.get("/api/loans/amount/:userId", authMiddleware, async (req, res) => {
+  
+  const userId=req.params.userId;
+  
+  const query = `
+    SELECT sum(outstanding_amount)
+    FROM loans
+    WHERE user_id = $1
+    ;
 
+  `;
+
+  try {
+    const result = await db.query(query, [userId]);
+    console.log(result.rows[0])
+    res.status(200).json({
+      message: "Loans fetched successfully",
+      loans: result.rows,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to fetch loans for particular user",
+      error: error.message,
+    });
+  }
+});
 app.put("/api/loans/:id",authMiddleware,async (req,res)=>{
   
   const userId=req.user.id;
@@ -225,6 +253,12 @@ app.delete("/api/loans/:loan_id", authMiddleware, async (req, res) => {
   }
 });
 
+// ASSEST - 
+
+app.get("/api/assest")
+
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
+
+

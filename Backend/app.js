@@ -116,7 +116,7 @@ app.get("/api/loans", authMiddleware, async (req, res) => {
 
 app.get("/api/loans/:id", authMiddleware, async (req, res) => {
   const user_id = req.user.id;
-  const {id}=req.params;
+  const id=req.params.id;
   console.log(user_id+" "+id);
   const query = `
     SELECT *
@@ -139,107 +139,60 @@ app.get("/api/loans/:id", authMiddleware, async (req, res) => {
   }
 });
 
-app.put("/api/loans/:id", authMiddleware, async (req, res) => {
-  const userId = req.user.id;
-  const id  = req.params.id;
-  let oldLoanName,oldLoanType,oldOutStandingAmt,OldInterest,oldMonthlyEmi;
-  //console.log(userId+" "+id);
+
+app.put("/api/loans/:id",authMiddleware,async (req,res)=>{
   
-  const queryForCurrentLoan = `
-    SELECT *
-    FROM loans
-    WHERE user_id = $1 AND id = $2
-    ORDER BY created_at DESC;
+  const userId=req.user.id;
+  const loanId=req.params.id;
+  
+  const {
+    loan_name, 
+    loan_type, 
+    outstanding_amount, 
+    interest_rate, 
+    monthly_emi
+  }=req.body;
+  console.log(loan_name+" "+ 
+    loan_type+" "+
+    outstanding_amount+" "+ 
+    interest_rate+" "+
+    monthly_emi+" ")
+  // coalesce ($1,loan_name) takes $1 or take already
+  const query=`
+    update loans
+    set loan_name=Coalesce($1,loan_name),
+    loan_type=Coalesce($2,loan_type),
+    outstanding_amount=Coalesce($3,outstanding_amount), 
+    interest_rate=Coalesce($4,interest_rate), 
+    monthly_emi=Coalesce($5,monthly_emi)
+    where user_id=$6 and id=$7
+    returning *
   `;
 
+  console.log(monthly_emi || null)
+  const values=[
+    loan_name || null, 
+    loan_type || null, 
+    outstanding_amount || null, 
+    interest_rate || null, 
+    monthly_emi || null,
+    userId,
+    loanId
+  ]
   try {
-    const result = await db.query(queryForCurrentLoan, [userId,id]);
-    console.log(result.rows[0]);
-    oldLoanName=result.rows[0].loan_name;
-    oldLoanType=result.rows[0].loan_type;
-    oldMonthlyEmi=result.rows[0].monthly_emi;
-    oldOutStandingAmt=result.rows[0].outstanding_amount;
-    OldInterest=result.rows[0].interest_rate;
-    
-      
-    
-  } catch (error) {
-    res.status(500).json({
-      message: "Failed to fetch loans",
-      error: error.message,
-    });
-  }
-  
-  console.log(req.body.loan_type!=undefined)
-  let newLoanName,newLoanType,newOutStandingAmt,newInterest,newMonthlyEmi;
-    newLoanName=oldLoanName;
-    newLoanType=oldLoanType;
-    newOutStandingAmt=oldOutStandingAmt;
-    newMonthlyEmi=oldMonthlyEmi;
-    newInterest=OldInterest;
-  if(req.body.loan_type!=undefined) newLoanType=req.body.loan_type;
-  if(req.body.loan_name!=undefined) newLoanName=req.body.loan_name;
-  if(req.body.outstanding_amount!=undefined) newOutStandingAmt=req.body.outstanding_amount;
-  if(req.body.monthly_emi!=undefined) newMonthlyEmi=req.body.monthly_emi;
-  if(req.body.interest_rate!=undefined) newInterest=req.body.interest_rate;
-
-  // const {
-    
-  //   newloanName,
-  //   newloanType,
-    
-  //   newoutstandingAmount,
-  //   newinterestRate,
-  //   newmonthlyEmi,
-    
-  // } = req.body;
-
-  console.log(newLoanName+" "+newLoanType+" "+newOutStandingAmt+" "+newInterest+" "+newMonthlyEmi)
-
-  
-
-  const query = `
-    UPDATE loans
-    SET
-      loan_name = $1,
-      loan_type = $2,
-      
-      outstanding_amount = $3,
-      interest_rate = $4,
-      monthly_emi = $5
-    WHERE id = $6 AND user_id = $7
-    RETURNING *;
-  `;
-
-  const values = [
-   
-    newLoanName,newLoanType,newOutStandingAmt,newInterest,newMonthlyEmi,
-    id,
-    userId
-  ];
-  console.log(values)
-  try {
-    const result = await db.query(query, values);
-
-    if (result.rowCount === 0) {
-      return res.status(404).json({
-        message: "Loan not found",
-      });
-    }
-
+    const result=await db.query(query,values);
     res.status(200).json({
-      message: "Loan updated successfully",
-      loan: result.rows[0],
+      message:"Update Success",
+      updatedLoan:result.rows
     });
+    
   } catch (error) {
     res.status(500).json({
-      message: "Failed to update loan",
-      error: error.message,
+      message:"Update failed",
+      error:error.message
     });
   }
-});
-
-
+})
 app.delete("/api/loans/:loan_id", authMiddleware, async (req, res) => {
   const userId = req.user.id;
   console.log(req.params);

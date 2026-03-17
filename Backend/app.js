@@ -255,7 +255,9 @@ app.delete("/api/loans/:loan_id", authMiddleware, async (req, res) => {
 
 // ASSEST - 
 
-app.get("/api/assest")
+app.get("/api/assest",authMiddleware,async(req,res)=>{
+  
+})
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);

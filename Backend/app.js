@@ -256,7 +256,7 @@ app.delete("/api/loans/:loan_id", authMiddleware, async (req, res) => {
 // ASSEST - 
 
 app.get("/api/assest",authMiddleware,async(req,res)=>{
-  
+  res.send("sd");
 })
 
 app.listen(PORT, () => {

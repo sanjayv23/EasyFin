@@ -1,6 +1,6 @@
 import express from "express";
 import pg from "pg";
-
+import jwt from "jsonwebtoken";
 import body from "body-parser";
 
 const app = express();
@@ -12,14 +12,14 @@ const db = new pg.Client({
   password: "232004",
   port: 5432,
 });
-
+const JWT_SECRET="sanjaymajasooo"
 db.connect();
 app.use(express.json());
 app.use(body.urlencoded({extended:true}));
 
 const authMiddleware = (req, res, next) => {
   const userId = req.header("x-user-id");
-
+  console.log(req.header("authorization"))
   if (!userId) {
     return res.status(401).json({
       message: "Unauthorized: missing user id",
@@ -30,11 +30,33 @@ const authMiddleware = (req, res, next) => {
   next();
 };
 
+const JWTauthMiddleware = (req, res, next) => {
+  const authheader =req.header("authorization").split(' ')[1];
+  console.log(authheader)
+  if (!authheader) {
+    return res.status(401).json({
+      message: "UNo token, authorization denied",
+    });
+  }
+
+  req.user = jwt.verify(authheader,JWT_SECRET);
+  next();
+};
+
 app.get("/", (req, res) => {
   res.send("Server is running");
 });
 
-
+//USERS- 
+app.post("/api/user/login",async (req,res)=>{
+  const userEmail=req.body.email;
+  const token=jwt.sign(
+    {id:userEmail},
+    JWT_SECRET,
+    {expiresIn:'1h'}
+  )
+  res.json({token});
+})
 // LOANS - 
 
 app.post("/api/loans", authMiddleware, async (req, res) => {
@@ -254,9 +276,11 @@ app.delete("/api/loans/:loan_id", authMiddleware, async (req, res) => {
 });
 
 // ASSEST - 
-
-app.get("/api/assest",authMiddleware,async(req,res)=>{
-  res.send("sd");
+app.get("/api/asset",JWTauthMiddleware,async(req,res)=>{
+  const userEmail=req.id;
+  console.log(userEmail);
+  
+  res.send("df");
 })
 
 app.listen(PORT, () => {

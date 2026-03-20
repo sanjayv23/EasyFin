@@ -278,7 +278,7 @@ app.delete("/api/loans/:loan_id", authMiddleware, async (req, res) => {
 // ASSEST - 
 app.get("/api/asset",JWTauthMiddleware,async(req,res)=>{
   const userEmail=req.id;
-  console.log(userEmail);
+  console.log("df"+userEmail);
   
   res.send("df");
 })

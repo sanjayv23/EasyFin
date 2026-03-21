@@ -38,7 +38,7 @@ const JWTauthMiddleware = (req, res, next) => {
       message: "UNo token, authorization denied",
     });
   }
-
+  console.log(" verift "+jwt.verify(authheader,JWT_SECRET))
   req.user = jwt.verify(authheader,JWT_SECRET);
   next();
 };
